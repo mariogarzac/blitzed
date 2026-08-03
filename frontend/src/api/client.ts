@@ -19,6 +19,7 @@ export const matchApi = {
     api.post<Match>(`/matches/${id}/rounds`, { scores }).then(r => r.data),
   undoRound: (id: number) => api.delete<Match>(`/matches/${id}/rounds/last`).then(r => r.data),
   end: (id: number) => api.post<Match>(`/matches/${id}/end`).then(r => r.data),
+  delete: (id: number) => api.delete(`/matches/${id}`),
 }
 
 export const statsApi = {

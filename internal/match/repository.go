@@ -135,6 +135,17 @@ func (r *Repository) GetDetail(ctx context.Context, id int) (Match, error) {
 	return m, nil
 }
 
+func (r *Repository) Delete(ctx context.Context, id int) error {
+	result, err := r.pool.Exec(ctx, `DELETE FROM matches WHERE id = $1`, id)
+	if err != nil {
+		return err
+	}
+	if result.RowsAffected() == 0 {
+		return errors.New("match not found")
+	}
+	return nil
+}
+
 func (r *Repository) UpdateFinished(ctx context.Context, tx pgx.Tx, matchID int, status string, finishedAt time.Time, winnerIDs []int) error {
 	if _, err := tx.Exec(ctx,
 		`UPDATE matches SET status = $1, finished_at = $2 WHERE id = $3`,

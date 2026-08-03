@@ -45,6 +45,12 @@ export const useMatchStore = defineStore('match', () => {
     return match
   }
 
+  async function deleteMatch(matchId: number) {
+    await matchApi.delete(matchId)
+    matches.value = matches.value.filter(m => m.id !== matchId)
+    if (activeMatch.value?.id === matchId) activeMatch.value = null
+  }
+
   function clearActiveMatch() {
     activeMatch.value = null
   }
@@ -60,6 +66,7 @@ export const useMatchStore = defineStore('match', () => {
     submitRound,
     undoLastRound,
     endMatch,
+    deleteMatch,
     clearActiveMatch,
   }
 })

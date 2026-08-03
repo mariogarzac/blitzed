@@ -101,6 +101,17 @@ func (c *Controller) UndoLastRound(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, m)
 }
 
+func (c *Controller) Delete(ctx echo.Context) error {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid match id")
+	}
+	if err := c.repo.Delete(ctx.Request().Context(), id); err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+	return ctx.NoContent(http.StatusNoContent)
+}
+
 func (c *Controller) EndMatch(ctx echo.Context) error {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {

@@ -61,6 +61,7 @@ func main() {
 	api.GET("/matches/:id", matchC.GetDetail)
 	api.POST("/matches/:id/rounds", matchC.SubmitRound)
 	api.DELETE("/matches/:id/rounds/last", matchC.UndoLastRound)
+	api.DELETE("/matches/:id", matchC.Delete)
 	api.POST("/matches/:id/end", matchC.EndMatch)
 
 	api.GET("/stats/head-to-head", statsC.HeadToHead)

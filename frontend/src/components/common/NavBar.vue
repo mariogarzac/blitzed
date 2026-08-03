@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-ef-bg0 text-ef-fg shadow-lg">
+  <nav class="bg-ef-bg0 text-ef-fg shadow-lg" style="padding-top: env(safe-area-inset-top);">
     <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
       <span class="text-xl font-bold tracking-tight text-ef-green">🃏 Blitzed</span>
       <div class="flex gap-1">
