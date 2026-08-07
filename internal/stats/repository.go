@@ -71,9 +71,10 @@ func (r *Repository) HeadToHead(ctx context.Context, playerAID, playerBID int) (
 		if err != nil {
 			continue
 		}
-		if winnerID == playerAID {
+		switch winnerID {
+		case playerAID:
 			result.PlayerAWins++
-		} else if winnerID == playerBID {
+		case playerBID:
 			result.PlayerBWins++
 		}
 	}
