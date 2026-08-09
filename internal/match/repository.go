@@ -217,7 +217,7 @@ func (r *Repository) InsertRound(ctx context.Context, matchID int, inputs []Scor
 		if lastCum != nil {
 			prev = *lastCum
 		}
-		cumulatives[inp.PlayerID] = prev + inp.Delta
+		cumulatives[inp.PlayerID] = max(prev+inp.Delta, 0)
 	}
 
 	for _, inp := range inputs {

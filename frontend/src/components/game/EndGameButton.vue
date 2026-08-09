@@ -2,7 +2,7 @@
   <div class="flex gap-2">
     <button
       @click="confirmEnd = true"
-      class="flex-1 py-2 rounded-lg border border-ef-bg4 text-ef-grey2 hover:border-ef-green hover:text-ef-green text-sm font-medium transition-colors"
+      class="flex-1 p-2 rounded-lg border border-ef-bg4 text-ef-grey2 hover:border-ef-green hover:text-ef-green text-sm font-medium transition-colors"
     >End Game Early</button>
   </div>
 

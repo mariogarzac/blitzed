@@ -1,6 +1,6 @@
 [build]
 cmd = "go build -o ./tmp/main ./cmd/blitzed/main.go"
-bin = "./tmp/main"
+entrypoint = "./tmp/main"
 include_ext = ["go", "sql"]
 exclude_dir = ["tmp", "frontend"]
 
