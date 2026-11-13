@@ -22,6 +22,9 @@
       </div>
     </div>
 
+    <p v-if="match.hard_mode" class="text-xs text-ef-yellow font-medium">Hard mode: scores can go below 0</p>
+    <p v-else class="text-xs text-ef-aqua font-medium">Scores can't go below 0</p>
+
     <p v-if="error" class="text-sm text-ef-green">{{ error }}</p>
 
     <button

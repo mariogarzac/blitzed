@@ -10,6 +10,7 @@ type Match struct {
 	ID           int             `json:"id"`
 	WinningScore int             `json:"winning_score"`
 	IsStandard   bool            `json:"is_standard"`
+	HardMode     bool            `json:"hard_mode"`
 	Status       string          `json:"status"`
 	StartedAt    time.Time       `json:"started_at"`
 	FinishedAt   *time.Time      `json:"finished_at"`

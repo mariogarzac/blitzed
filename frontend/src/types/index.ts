@@ -22,6 +22,7 @@ export interface Match {
   id: number
   winning_score: number
   is_standard: boolean
+  hard_mode: boolean
   status: 'in_progress' | 'finished' | 'draw'
   started_at: string
   finished_at: string | null

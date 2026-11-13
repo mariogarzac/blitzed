@@ -29,6 +29,7 @@ func (c *Controller) Create(ctx echo.Context) error {
 	var body struct {
 		PlayerIDs    []int `json:"player_ids"`
 		WinningScore int   `json:"winning_score"`
+		HardMode     bool  `json:"hard_mode"`
 	}
 	if err := ctx.Bind(&body); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid request body")
@@ -37,7 +38,7 @@ func (c *Controller) Create(ctx echo.Context) error {
 		body.WinningScore = 75
 	}
 
-	m, err := c.svc.CreateMatch(ctx.Request().Context(), body.WinningScore, body.PlayerIDs)
+	m, err := c.svc.CreateMatch(ctx.Request().Context(), body.WinningScore, body.HardMode, body.PlayerIDs)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
