@@ -12,8 +12,8 @@ export const playerApi = {
 export const matchApi = {
   list: (status?: string) =>
     api.get<MatchSummary[]>('/matches', { params: status ? { status } : {} }).then(r => r.data),
-  create: (playerIds: number[], winningScore: number) =>
-    api.post<Match>('/matches', { player_ids: playerIds, winning_score: winningScore }).then(r => r.data),
+  create: (playerIds: number[], winningScore: number, hardMode: boolean) =>
+    api.post<Match>('/matches', { player_ids: playerIds, winning_score: winningScore, hard_mode: hardMode }).then(r => r.data),
   get: (id: number) => api.get<Match>(`/matches/${id}`).then(r => r.data),
   submitRound: (id: number, scores: RoundScoreInput[]) =>
     api.post<Match>(`/matches/${id}/rounds`, { scores }).then(r => r.data),

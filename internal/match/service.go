@@ -50,11 +50,11 @@ func checkWinCondition(winningScore int, cumulatives map[int]int) winResult {
 	return winResult{status: "draw", winners: top}
 }
 
-func (s *Service) CreateMatch(ctx context.Context, winningScore int, playerIDs []int) (Match, error) {
+func (s *Service) CreateMatch(ctx context.Context, winningScore int, hardMode bool, playerIDs []int) (Match, error) {
 	if len(playerIDs) < 2 || len(playerIDs) > 8 {
 		return Match{}, errors.New("a match requires between 2 and 8 players")
 	}
-	return s.repo.Create(ctx, winningScore, playerIDs)
+	return s.repo.Create(ctx, winningScore, hardMode, playerIDs)
 }
 
 func (s *Service) SubmitRound(ctx context.Context, matchID int, inputs []ScoreInput) (Match, error) {

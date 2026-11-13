@@ -24,7 +24,7 @@ func (r *Repository) Pool() *pgxpool.Pool {
 
 // --- Match CRUD ---
 
-func (r *Repository) Create(ctx context.Context, winningScore int, playerIDs []int) (Match, error) {
+func (r *Repository) Create(ctx context.Context, winningScore int, hardMode bool, playerIDs []int) (Match, error) {
 	tx, err := r.pool.Begin(ctx)
 	if err != nil {
 		return Match{}, err
@@ -35,10 +35,10 @@ func (r *Repository) Create(ctx context.Context, winningScore int, playerIDs []i
 
 	var m Match
 	err = tx.QueryRow(ctx,
-		`INSERT INTO matches (winning_score, is_standard) VALUES ($1, $2)
-		 RETURNING id, winning_score, is_standard, status, started_at, finished_at`,
-		winningScore, isStandard,
-	).Scan(&m.ID, &m.WinningScore, &m.IsStandard, &m.Status, &m.StartedAt, &m.FinishedAt)
+		`INSERT INTO matches (winning_score, is_standard, hard_mode) VALUES ($1, $2, $3)
+		 RETURNING id, winning_score, is_standard, hard_mode, status, started_at, finished_at`,
+		winningScore, isStandard, hardMode,
+	).Scan(&m.ID, &m.WinningScore, &m.IsStandard, &m.HardMode, &m.Status, &m.StartedAt, &m.FinishedAt)
 	if err != nil {
 		return Match{}, err
 	}
@@ -108,8 +108,8 @@ func (r *Repository) List(ctx context.Context, status string) ([]MatchSummary, e
 func (r *Repository) GetDetail(ctx context.Context, id int) (Match, error) {
 	var m Match
 	err := r.pool.QueryRow(ctx,
-		`SELECT id, winning_score, is_standard, status, started_at, finished_at FROM matches WHERE id = $1`, id,
-	).Scan(&m.ID, &m.WinningScore, &m.IsStandard, &m.Status, &m.StartedAt, &m.FinishedAt)
+		`SELECT id, winning_score, is_standard, hard_mode, status, started_at, finished_at FROM matches WHERE id = $1`, id,
+	).Scan(&m.ID, &m.WinningScore, &m.IsStandard, &m.HardMode, &m.Status, &m.StartedAt, &m.FinishedAt)
 	if err != nil {
 		return Match{}, err
 	}
@@ -180,7 +180,8 @@ func (r *Repository) InsertRound(ctx context.Context, matchID int, inputs []Scor
 	defer tx.Rollback(ctx)
 
 	var status string
-	if err = tx.QueryRow(ctx, `SELECT status FROM matches WHERE id = $1`, matchID).Scan(&status); err != nil {
+	var hardMode bool
+	if err = tx.QueryRow(ctx, `SELECT status, hard_mode FROM matches WHERE id = $1`, matchID).Scan(&status, &hardMode); err != nil {
 		return 0, nil, err
 	}
 	if status != "in_progress" {
@@ -217,7 +218,12 @@ func (r *Repository) InsertRound(ctx context.Context, matchID int, inputs []Scor
 		if lastCum != nil {
 			prev = *lastCum
 		}
-		cumulatives[inp.PlayerID] = max(prev+inp.Delta, 0)
+		// Hard mode lets scores go negative; otherwise 0 is the floor
+		if hardMode {
+			cumulatives[inp.PlayerID] = prev + inp.Delta
+		} else {
+			cumulatives[inp.PlayerID] = max(prev+inp.Delta, 0)
+		}
 	}
 
 	for _, inp := range inputs {

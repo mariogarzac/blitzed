@@ -16,8 +16,35 @@
           min="10"
           class="w-28 bg-ef-bg2 border border-ef-bg4 rounded-lg px-3 py-2 text-ef-fg focus:outline-none focus:border-ef-green"
         />
-        <span v-if="winningScore !== 75" class="text-xs text-ef-yellow font-medium">Custom game — won't count toward wins</span>
+        <span v-if="winningScore !== 75" class="text-xs text-ef-yellow font-medium"> Allows score to be negative</span>
         <span v-else class="text-xs text-ef-aqua font-medium">Standard game</span>
+      </div>
+    </div>
+
+    <div class="space-y-1">
+      <label id="hard-mode-label" class="block text-sm font-medium text-ef-grey2">Difficulty Setting</label>
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          role="switch"
+          :aria-checked="hardMode"
+          aria-labelledby="hard-mode-label"
+          @click="toggleHardMode"
+          :class="hardMode ? 'bg-ef-bg-yellow border-ef-yellow' : 'bg-ef-bg2 border-ef-bg4'"
+          class="relative inline-flex shrink-0 w-11 h-6 border rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ef-green focus-visible:ring-offset-2 focus-visible:ring-offset-ef-bg0"
+        >
+          <span
+            :class="hardMode ? 'translate-x-[22px] bg-ef-yellow' : 'translate-x-0.5 bg-ef-grey1'"
+            class="absolute top-1/2 -translate-y-1/2 left-0 w-[18px] h-[18px] rounded-full shadow transition-transform"
+          />
+        </button>
+        <span
+          @click="toggleHardMode"
+          :class="hardMode ? 'text-ef-yellow' : 'text-ef-grey1'"
+          class="text-sm font-medium cursor-pointer select-none w-20"
+        >{{ hardMode ? 'Hard' : 'Normal' }}</span>
+        <span v-if="hardMode" class="text-xs text-ef-yellow font-medium">Allows score to be negative</span>
+        <span v-else class="text-xs text-ef-aqua font-medium">No negative score</span>
       </div>
     </div>
 
@@ -76,6 +103,7 @@ const { players } = storeToRefs(playerStore)
 
 const selectedPlayerIds = ref<number[]>([])
 const winningScore = ref(75)
+const hardMode = ref(false)
 const newPlayerName = ref('')
 const loading = ref(false)
 const error = ref('')
@@ -100,11 +128,15 @@ async function submit() {
   error.value = ''
   loading.value = true
   try {
-    await matchStore.createMatch(selectedPlayerIds.value, winningScore.value)
+    await matchStore.createMatch(selectedPlayerIds.value, winningScore.value, hardMode.value)
   } catch (e: any) {
     error.value = e?.response?.data?.message ?? 'Failed to create game'
   } finally {
     loading.value = false
   }
+}
+
+async function toggleHardMode() {
+  hardMode.value = !hardMode.value
 }
 </script>

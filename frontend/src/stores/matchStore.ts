@@ -21,8 +21,8 @@ export const useMatchStore = defineStore('match', () => {
     currentMatchDetail.value = await matchApi.get(id)
   }
 
-  async function createMatch(playerIds: number[], winningScore: number) {
-    const match = await matchApi.create(playerIds, winningScore)
+  async function createMatch(playerIds: number[], winningScore: number, hardMode: boolean) {
+    const match = await matchApi.create(playerIds, winningScore, hardMode)
     activeMatch.value = match
     return match
   }

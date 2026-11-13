@@ -1,0 +1,1 @@
+ALTER TABLE matches ADD COLUMN hard_mode BOOLEAN NOT NULL DEFAULT false;
